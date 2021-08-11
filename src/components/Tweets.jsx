@@ -5,7 +5,7 @@ import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faRetweet } from "@fortawesome/free-solid-svg-icons";
 
 
-import ApiService from "./ApiService";
+import ApiService from "../api/ApiService";
 
 class Tweets extends Component {
 
@@ -23,7 +23,7 @@ class Tweets extends Component {
 
     reloadTweetList() {
         ApiService.fetchTweets()
-            .then((res) => {
+            .then((res) => {    
                 console.log(res.data);
                 this.setState({tweets: res.data})
             });
@@ -31,11 +31,13 @@ class Tweets extends Component {
 
     render() {
         return (
-            <div>                
+            <div>
+            <h1>{this.props.username}</h1>     
+            <h1>{this.props.password}</h1>     
                 {
                     this.state.tweets.map(
                     tweet =>
-                        <div className="border" style={{padding: "10px"}}>
+                        <div key={tweet.id} className="border" style={{padding: "10px"}}>
                             <img src={tweet.user.profilePic} alt="" style={{verticalAlign: "top", borderRadius: "50%"}}></img>
                             <div style={{display: "inline-block", paddingLeft: "10px"}}>
                                 <span>

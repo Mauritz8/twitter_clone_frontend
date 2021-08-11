@@ -7,6 +7,10 @@ class ApiService {
     fetchTweets() {
         return axios.get(API_BASE_URL + "/tweets");
     }
+
+    checkIfUserExists() {
+        return axios.get(API_BASE_URL);
+    }
 }
 
 export default new ApiService();
