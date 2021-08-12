@@ -3,9 +3,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faRetweet } from "@fortawesome/free-solid-svg-icons";
+import { withRouter } from "react-router";
 
 
-import ApiService from "./ApiService";
+import ApiService from "../api/ApiService";
 
 class Tweets extends Component {
 
@@ -18,12 +19,24 @@ class Tweets extends Component {
     }
 
     componentDidMount() {
-        this.reloadTweetList();
+        if (this.isAuthenticated()) {
+            this.reloadTweetList();
+        } else {
+            this.props.history.push("/login");
+        }
+    }
+
+    isAuthenticated() {
+        if (this.props.username === "" && this.props.password === "") {
+            console.log("Not authenticated");
+            return false;
+        }
+        return true;
     }
 
     reloadTweetList() {
         ApiService.fetchTweets()
-            .then((res) => {
+            .then((res) => {    
                 console.log(res.data);
                 this.setState({tweets: res.data})
             });
@@ -31,11 +44,12 @@ class Tweets extends Component {
 
     render() {
         return (
-            <div>                
+            <div>
+            <p>{this.props.username}</p>     
                 {
                     this.state.tweets.map(
                     tweet =>
-                        <div className="border" style={{padding: "10px"}}>
+                        <div key={tweet.id} className="border" style={{padding: "10px"}}>
                             <img src={tweet.user.profilePic} alt="" style={{verticalAlign: "top", borderRadius: "50%"}}></img>
                             <div style={{display: "inline-block", paddingLeft: "10px"}}>
                                 <span>
@@ -72,4 +86,4 @@ class Tweets extends Component {
     }
 }
 
-export default Tweets;
+export default withRouter(Tweets);
