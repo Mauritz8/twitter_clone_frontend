@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faRetweet } from "@fortawesome/free-solid-svg-icons";
+import { withRouter } from "react-router";
 
 
 import ApiService from "../api/ApiService";
@@ -18,7 +19,19 @@ class Tweets extends Component {
     }
 
     componentDidMount() {
-        this.reloadTweetList();
+        if (this.isAuthenticated()) {
+            this.reloadTweetList();
+        } else {
+            this.props.history.push("/login");
+        }
+    }
+
+    isAuthenticated() {
+        if (this.props.username === "" && this.props.password === "") {
+            console.log("Not authenticated");
+            return false;
+        }
+        return true;
     }
 
     reloadTweetList() {
@@ -32,8 +45,7 @@ class Tweets extends Component {
     render() {
         return (
             <div>
-            <h1>{this.props.username}</h1>     
-            <h1>{this.props.password}</h1>     
+            <p>{this.props.username}</p>     
                 {
                     this.state.tweets.map(
                     tweet =>
@@ -74,4 +86,4 @@ class Tweets extends Component {
     }
 }
 
-export default Tweets;
+export default withRouter(Tweets);

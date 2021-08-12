@@ -4,11 +4,16 @@ import Button from "react-bootstrap/Button";
 import { withRouter } from "react-router-dom";
 
 import "./css/Login.css";
+import ApiService from "../api/ApiService";
 
 class Login extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      error: ""
+    }
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -17,10 +22,22 @@ class Login extends React.Component {
     return this.props.username.length > 0 && this.props.password.length > 0;
   }
 
+  validateLogin() {
+    ApiService.loginUser(this.props.username, this.props.password)
+    .then((res) => {
+      console.log(res.data);
+      this.setState({error: res.data})
+      if (res.data !== "") {
+        return;
+      } else {
+        this.props.history.push("/")
+      }
+    })
+  }
+
   handleSubmit(event) {
     event.preventDefault();
-
-    this.props.history.push("/")
+    this.validateLogin()
   }
 
   render() {
@@ -50,6 +67,12 @@ class Login extends React.Component {
           <Button size="lg" type="submit" style={{marginTop: ".5rem"}} disabled={!this.validateForm()}>
           Login
           </Button>
+
+          {this.state.error !== "" &&
+            <div className="alert alert-danger" id="login-error" role="alert">
+              {this.state.error}
+            </div>
+          }
         </Form>
       </div>
     );

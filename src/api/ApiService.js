@@ -8,8 +8,11 @@ class ApiService {
         return axios.get(API_BASE_URL + "/tweets");
     }
 
-    checkIfUserExists() {
-        return axios.get(API_BASE_URL);
+    loginUser(username, password) {
+        const credentials = { username: username, password: password };
+        return axios.post(API_BASE_URL + "/users/login", credentials, {
+            validateStatus: () => true
+        });
     }
 }
 
