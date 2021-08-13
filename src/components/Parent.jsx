@@ -14,8 +14,8 @@ class Parent extends Component {
      super(props);
      this.handleInputChange = this.handleInputChange.bind(this);
      this.state = {
-         username: "",
-         password: "",
+         username: JSON.parse(localStorage.getItem('username')) || "",
+         password: JSON.parse(localStorage.getItem('password')) || "",
      }   
     }
 
@@ -26,6 +26,9 @@ class Parent extends Component {
     
         this.setState({
           [name]: value
+        }, () => {
+            localStorage.setItem('username', JSON.stringify(this.state.username))
+            localStorage.setItem('password', JSON.stringify(this.state.password))
         })
       }
 
