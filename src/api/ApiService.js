@@ -4,13 +4,23 @@ const API_BASE_URL = 'http://localhost:8080/api/v1';
 
 class ApiService {
 
-    fetchTweets() {
+    getTweets() {
         return axios.get(API_BASE_URL + "/tweets");
+    }
+
+    getUserWithUsername(username) {
+        return axios.get(API_BASE_URL + "/users?username=" + username);
     }
 
     loginUser(username, password) {
         const credentials = { username: username, password: password };
         return axios.post(API_BASE_URL + "/users/login", credentials, {
+            validateStatus: () => true
+        });
+    }
+
+    postTweet(userId, tweetContent) {
+        return axios.post(API_BASE_URL + "/users/" + userId + "/tweets/add?tweetContent=" + tweetContent, {
             validateStatus: () => true
         });
     }

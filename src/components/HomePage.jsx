@@ -7,60 +7,82 @@ import { withRouter } from "react-router";
 
 
 import ApiService from "../api/ApiService";
+import CreateTweetPopup from "./CreateTweetPopup";
+import "./css/HomePage.css";
 
-class Tweets extends Component {
+
+class HomePage extends Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            tweets: []
+            tweets: [],
+            showCreateTweetPopup: false
         }
         this.reloadTweetList = this.reloadTweetList.bind(this);
+        this.showCreateTweetPopup = this.showCreateTweetPopup.bind(this);
+        this.hideCreateTweetPopup = this.hideCreateTweetPopup.bind(this);
+        this.contentCreateTweetPopup = React.createRef();
+        this.handleClickOutside = this.handleClickOutside.bind(this);
     }
 
     componentDidMount() {
         if (this.isAuthenticated()) {
             this.reloadTweetList();
+            document.addEventListener('mousedown', this.handleClickOutside);
         } else {
             this.props.history.push("/login");
         }
+        this.setState({showCreateTweetPopup: false});
+    }
+
+    componentWillUnmount() { 
+        document.removeEventListener("click", this.handleClickOutside); 
     }
 
     isAuthenticated() {
-        if (this.props.username === "" && this.props.password === "") {
-            console.log("Not authenticated");
+        if (this.props.user.username === "" || this.props.user.password === "") {
             return false;
         }
         return true;
     }
 
     reloadTweetList() {
-        ApiService.fetchTweets()
+        ApiService.getTweets()
             .then((res) => {    
-                console.log(res.data);
                 this.setState({tweets: res.data})
             });
     }
 
+    showCreateTweetPopup() {
+        this.setState({showCreateTweetPopup: true});
+    }
+
+    hideCreateTweetPopup() {
+        this.setState({showCreateTweetPopup: false});
+    }
+
+    handleClickOutside(event) {
+        if(this.contentCreateTweetPopup.current && !this.contentCreateTweetPopup.current.contains(event.target)) {
+            this.setState({showCreateTweetPopup: false});
+        } 
+        return;
+    }
+
+
+
     render() {
         return (
-            <div>
-            <p>{this.props.username}</p>     
+            <div>   
+                <p>{this.props.user.username}</p>     
+
                 {
                     this.state.tweets.map(
                     tweet =>
                         <div key={tweet.id} className="border" style={{padding: "10px"}}>
                             <img src={tweet.user.profilePic} alt="" style={{verticalAlign: "top", borderRadius: "50%"}}></img>
                             <div style={{display: "inline-block", paddingLeft: "10px"}}>
-                                <span>
-                                <b>{tweet.user.displayName}</b> 
-                                &nbsp;
-                                @{tweet.user.username} 
-                                &nbsp;
-                                &#183;
-                                &nbsp; 
-                                {tweet.timeTweeted}
-                                </span>
+                                <span><b>{tweet.user.displayName}</b> @{tweet.user.username} &#183; {tweet.timeTweeted}</span>
                                 <p>{tweet.content}</p>
                                 <span>
                                     <span>
@@ -80,10 +102,18 @@ class Tweets extends Component {
                         </div>
                     )            
                 }
-                  
+            
+            <div>
+                <button type="button" className="btn btn-primary" id="createTweetBtn" onClick={this.showCreateTweetPopup}>Tweet</button>
+            </div>
+
+            {this.state.showCreateTweetPopup &&
+                <CreateTweetPopup contentCreateTweetPopup={this.contentCreateTweetPopup} hideCreateTweetPopup={this.hideCreateTweetPopup} user={this.props.user} reloadTweets={this.reloadTweetList}/>
+            }
+                 
             </div>
         );
     }
 }
 
-export default withRouter(Tweets);
+export default withRouter(HomePage);
