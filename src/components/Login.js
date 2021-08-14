@@ -19,25 +19,26 @@ class Login extends React.Component {
   }
 
   validateForm() {
-    return this.props.username.length > 0 && this.props.password.length > 0;
+    return this.props.user.username.length > 0 && this.props.user.password.length > 0;
   }
 
   validateLogin() {
-    ApiService.loginUser(this.props.username, this.props.password)
+    ApiService.loginUser(this.props.user.username, this.props.user.password)
     .then((res) => {
-      console.log(res.data);
       this.setState({error: res.data})
       if (res.data !== "") {
         return;
       } else {
-        this.props.history.push("/")
+        this.props.setLoggedInUser(this.props.user.username);
+        this.props.history.push("/");
       }
     })
   }
 
+
   handleSubmit(event) {
     event.preventDefault();
-    this.validateLogin()
+    this.validateLogin();
   }
 
   render() {
@@ -50,8 +51,8 @@ class Login extends React.Component {
               autoFocus
               name="username"
               type="text"
-              value={this.props.username}
-              onChange={this.props.handleInputChange}
+              value={this.props.user.username}
+              onChange={this.props.handleInputChangeForUser}
               autoComplete="off"
             />
           </Form.Group>
@@ -60,11 +61,11 @@ class Login extends React.Component {
             <Form.Control
               name="password"
               type="password"
-              value={this.props.password}
-              onChange={this.props.handleInputChange}
+              value={this.props.user.password}
+              onChange={this.props.handleInputChangeForUser}
             />
           </Form.Group>
-          <Button size="lg" type="submit" style={{marginTop: ".5rem"}} disabled={!this.validateForm()}>
+          <Button size="lg" type="submit" className="btn btn-primary" style={{marginTop: ".5rem", color: "white"}} disabled={!this.validateForm()}>
           Login
           </Button>
 
