@@ -25,8 +25,8 @@ class Login extends React.Component {
   validateLogin() {
     ApiService.loginUser(this.props.user.username, this.props.user.password)
     .then((res) => {
-      this.setState({error: res.data})
-      if (res.data !== "") {
+      if (typeof res.data == "string") {
+        this.setState({error: res.data})
         return;
       } else {
         this.props.setLoggedInUser(this.props.user.username);

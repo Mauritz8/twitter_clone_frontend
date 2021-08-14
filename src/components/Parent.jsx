@@ -8,6 +8,7 @@ import ApiService from "../api/ApiService";
 
 import HomePage from "./HomePage";
 import Login from "./Login";
+import Register from "./Register";
 
 class Parent extends Component {
 
@@ -78,6 +79,9 @@ class Parent extends Component {
                         </Route>
                         <Route exact path="/login">
                             <Login user={this.state.user} handleInputChangeForUser={this.handleInputChangeForUser} setLoggedInUser={this.setLoggedInUser}/>
+                        </Route>
+                        <Route exact path="/register">
+                            <Register user={this.state.user} handleInputChangeForUser={this.handleInputChangeForUser} setLoggedInUser={this.setLoggedInUser}/>
                         </Route>
                     </Switch>
                 </Router>
