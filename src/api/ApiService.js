@@ -19,6 +19,13 @@ class ApiService {
         });
     }
 
+    registerUser(username, displayName, password) {
+        const credentials = { username: username, displayName: displayName, password: password };
+        return axios.post(API_BASE_URL + "/users/add", credentials, {
+            validateStatus: () => true
+        })
+    }
+
     postTweet(userId, tweetContent) {
         return axios.post(API_BASE_URL + "/users/" + userId + "/tweets/add?tweetContent=" + tweetContent, {
             validateStatus: () => true
