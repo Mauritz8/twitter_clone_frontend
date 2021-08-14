@@ -27,6 +27,7 @@ class Parent extends Component {
      }
      this.handleInputChangeForUser = this.handleInputChangeForUser.bind(this);   
      this.setLoggedInUser = this.setLoggedInUser.bind(this);
+     this.clearState = this.clearState.bind(this);
     }
 
     setLoggedInUser(username) {
@@ -69,13 +70,26 @@ class Parent extends Component {
         })
     }
 
+    clearState() {
+        this.setState({
+            user: {
+                id: "",
+                username: "",
+                displayName: "",
+                password: "",
+                profilePic: "",
+                tweets: []
+            }
+        })
+    }
+
     render() {
         return (
             <div>
                 <Router>
                     <Switch>
                         <Route exact path="/">
-                            <HomePage user={this.state.user} />
+                            <HomePage user={this.state.user} clearState={this.clearState}/>
                         </Route>
                         <Route exact path="/login">
                             <Login user={this.state.user} handleInputChangeForUser={this.handleInputChangeForUser} setLoggedInUser={this.setLoggedInUser}/>

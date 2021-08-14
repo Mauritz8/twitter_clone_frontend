@@ -24,6 +24,7 @@ class HomePage extends Component {
         this.hideCreateTweetPopup = this.hideCreateTweetPopup.bind(this);
         this.contentCreateTweetPopup = React.createRef();
         this.handleClickOutside = this.handleClickOutside.bind(this);
+        this.logout = this.logout.bind(this);
     }
 
     componentDidMount() {
@@ -69,12 +70,20 @@ class HomePage extends Component {
         return;
     }
 
+    logout() {
+        localStorage.clear();
+        this.props.clearState();
+        this.props.history.push("/login");
+    }
 
 
     render() {
         return (
-            <div>   
-                <p>{this.props.user.username}</p>     
+            <div>
+                <div style={{width: "100%", marginBottom: "1rem", height: "fit-content"}}>
+                    <p style={{display: "inline-block"}}>{this.props.user.username}</p>
+                    <button onClick={this.logout} className="btn btn-primary" style={{color: "white", float: "right"}}>Log out</button>     
+                </div>   
 
                 {
                     this.state.tweets.map(
