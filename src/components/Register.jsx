@@ -59,7 +59,6 @@ class Register extends React.Component {
           <Form.Group size="lg">
             <Form.Label>Display name</Form.Label>
             <Form.Control
-              autoFocus
               name="displayName"
               type="text"
               value={this.props.user.displayName}

@@ -33,6 +33,10 @@ class ApiService {
             validateStatus: () => true
         });
     }
+
+    searchUsers(searchPattern) {
+        return axios.get(API_BASE_URL + "/users/search?searchPattern=" + searchPattern);
+    }
 }
 
 export default new ApiService();

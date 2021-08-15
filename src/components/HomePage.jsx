@@ -15,7 +15,9 @@ class HomePage extends Component {
         super(props)
         this.state = {
             tweets: [],
-            showCreateTweetPopup: false
+            showCreateTweetPopup: false,
+            searchPattern: "",
+            searchResults: []
         }
         this.reloadTweetList = this.reloadTweetList.bind(this);
         this.showCreateTweetPopup = this.showCreateTweetPopup.bind(this);
@@ -23,6 +25,7 @@ class HomePage extends Component {
         this.contentCreateTweetPopup = React.createRef();
         this.handleClickOutside = this.handleClickOutside.bind(this);
         this.logout = this.logout.bind(this);
+        this.updateSearch = this.updateSearch.bind(this);
     }
 
     componentDidMount() {
@@ -74,19 +77,60 @@ class HomePage extends Component {
         this.props.history.push("/login");
     }
 
+    updateSearch(event) {
+        var searchPattern = event.target.value;
+        ApiService.searchUsers(searchPattern)
+            .then((res) => {
+                if (searchPattern === "") {
+                    this.setState({
+                        searchPattern: searchPattern,
+                        searchResults: []
+                    })
+                } else {
+                    this.setState({
+                        searchPattern: searchPattern,
+                        searchResults: res.data,
+                    });
+                }
+            })
+    }
 
     render() {
         return (
             <div>
                 <div style={{width: "100%", marginBottom: "1rem", height: "fit-content"}}>
                     <p style={{display: "inline-block"}}>{this.props.user.username}</p>
+                    <div style={{display: "inline-block"}}>
+                        <input type="text" placeholder="Search user" style={{marginLeft: "15rem"}} onChange={this.updateSearch} />
+
+                        <div style={{marginLeft: "15rem", position: "absolute"}}>
+                                {
+                                    this.state.searchResults.map(
+                                        user =>
+                                        <div className="card">  
+                                            <div className="card-body">
+                                                <img src={user.profilePic} alt="" style={{verticalAlign: "top", borderRadius: "50%", display: "inline-block"}}></img>
+                                                <div style={{display: "inline-block", marginLeft: ".5rem"}}>
+                                                    <a className="link" id="displayName-link" href={"/" + user.username}>
+                                                        <h5 className="card-title" style={{marginBottom: "0"}}>{user.displayName}</h5>
+                                                    </a>
+                                                    <p className="card-text">@{user.username}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    )   
+                                }
+                        </div>
+    
+                    </div>
                     <button onClick={this.logout} className="btn btn-primary" style={{color: "white", float: "right"}}>Log out</button>     
-                </div>   
+                </div>
 
                 {
                     this.state.tweets.map(
                     tweet =>
-                        <Tweet tweet={tweet} user={tweet.user}/>
+                        <Tweet tweet={tweet} user={tweet.user} key={tweet.id}/>
                     )            
                 }
             
