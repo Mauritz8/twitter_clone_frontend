@@ -9,7 +9,9 @@ class ApiService {
     }
 
     getUserWithUsername(username) {
-        return axios.get(API_BASE_URL + "/users?username=" + username);
+        return axios.get(API_BASE_URL + "/users?username=" + username, {
+            validateStatus: () => true
+        });
     }
 
     loginUser(username, password) {
