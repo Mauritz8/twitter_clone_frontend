@@ -1,7 +1,7 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 
 //import "./css/Register.css";
 import ApiService from "../api/ApiService";
@@ -76,9 +76,10 @@ class Register extends React.Component {
               onChange={this.props.handleInputChangeForUser}
             />
           </Form.Group>
-          <Button size="lg" type="submit" className="btn btn-primary" style={{marginTop: ".5rem", color: "white"}} disabled={!this.validateForm()}>
+          <Button size="lg" type="submit" className="btn btn-primary" style={{marginTop: ".5rem", color: "white", display: "inline-block"}} disabled={!this.validateForm()}>
           Register
           </Button>
+          <small style={{display: "inline-block", marginTop: "0.5rem", marginLeft: ".5rem"}}>Already have an account? <Link to="/login">Log in</Link></small>
 
           {this.state.error !== "" &&
             <div className="alert alert-danger" id="login-error" role="alert">
