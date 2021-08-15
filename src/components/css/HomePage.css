@@ -5,3 +5,7 @@
     margin: 50px;
     color: white;
 }
+
+.card:hover {
+    background-color: lightgrey;
+}
